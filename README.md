@@ -121,3 +121,17 @@ B.Tech Computer Science Engineering Student
 ## ⭐ If you like this project
 
 Give this repository a ⭐ on GitHub!
+
+## Dashboard Preview
+### Home Dashboard 
+![Home Dashboard](images/dashboard-home.png)
+
+### KPI Cards
+![KPI Cards](images/KPI-cards.png)
+
+### Heatmap
+![Heatmap](images/Heatmap.png)
+
+### Charts
+![Charts](images/Charts.png)
+
