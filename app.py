@@ -4,7 +4,9 @@ import plotly.express as px
 import psycopg2
 from datetime import datetime
 import time
-
+from dotenv import load_dotenv
+import os
+load_dotenv()
 
 st.set_page_config(page_title="Student Analytics Dashboard", layout="wide")
 
@@ -91,11 +93,11 @@ st.markdown(hide_menu, unsafe_allow_html=True)
 with st.spinner("Fetching data from PstgreSQL..."):
 
     conn = psycopg2.connect(
-    host="localhost",   
-    database="students",
-    user="postgres",
-    password="Aarsh2004",
-    port="5432"
+    host= os.getenv("DB_HOST"),   
+    database=os.getenv("DB_NAME"),
+    user=os.getenv("DB_USER"),
+    password=os.getenv("DB_PASSWORD"),
+    port=os.getenv("DB_HOST")
 )
 query = "SELECT * FROM students"    
 df = pd.read_sql(query, conn)
