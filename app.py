@@ -97,7 +97,8 @@ with st.spinner("Fetching data from PstgreSQL..."):
     database=os.getenv("DB_NAME"),
     user=os.getenv("DB_USER"),
     password=os.getenv("DB_PASSWORD"),
-    port=os.getenv("DB_HOST")
+    port=os.getenv("DB_PORT"),
+    sslmode="require"
 )
 query = "SELECT * FROM students"    
 df = pd.read_sql(query, conn)
