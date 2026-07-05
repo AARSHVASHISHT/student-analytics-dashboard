@@ -4,9 +4,12 @@ import plotly.express as px
 import psycopg2
 from datetime import datetime
 import time
-from dotenv import load_dotenv
 import os
-load_dotenv()
+from dotenv import load_dotenv
+load_dotenv(override=True)
+print(os.environ.get("DB_HOST"))
+from dotenv import dotenv_values
+
 
 st.set_page_config(page_title="Student Analytics Dashboard", layout="wide")
 
@@ -91,8 +94,10 @@ st.markdown("""
 
 st.markdown(hide_menu, unsafe_allow_html=True)
 with st.spinner("Fetching data from PstgreSQL..."):
-
-    conn = psycopg2.connect(
+            print("HOST:", os.getenv("DB_HOST"))
+            print("PORT:", os.getenv("DB_PORT"))
+            print("NAME:", os.getenv("DB_NAME"))
+            conn = psycopg2.connect(
     host= os.getenv("DB_HOST"),   
     database=os.getenv("DB_NAME"),
     user=os.getenv("DB_USER"),
@@ -100,7 +105,19 @@ with st.spinner("Fetching data from PstgreSQL..."):
     port=os.getenv("DB_PORT"),
     sslmode="require"
 )
-query = "SELECT * FROM students"    
+            
+cur = conn.cursor()
+cur.execute("SELECT current_database();")
+print("Database:", cur.fetchone())
+
+cur.execute("Select current_schema();")
+print("Schema:", cur.fetchone())
+
+cur.execute("SELECT tablename FROM pg_tables where schemaname ='public';")
+print(cur.fetchall())  
+
+
+query = "SELECT * FROM public.students"    
 df = pd.read_sql(query, conn)
 conn.close()
 
