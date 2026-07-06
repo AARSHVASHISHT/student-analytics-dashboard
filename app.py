@@ -93,7 +93,7 @@ st.markdown("""
 
 
 st.markdown(hide_menu, unsafe_allow_html=True)
-with st.spinner("Fetching data from PstgreSQL..."):
+with st.spinner("Fetching data from PostgreSQL ..."):
             print("HOST:", os.getenv("DB_HOST"))
             print("PORT:", os.getenv("DB_PORT"))
             print("NAME:", os.getenv("DB_NAME"))
@@ -228,10 +228,10 @@ st.info(
 
 #kpi card
 total_students = len(filtered_df)
-average_marks = filtered_df['marks'].mean()
-average_attendance = filtered_df['attendance_perc'].mean()
-
-st.markdown(f"""
+average_marks = 0 if filtered_df.empty else round(filtered_df['marks'].mean(),2)
+average_attendance = 0  if filtered_df.empty else round (filtered_df['attendance_perc'].mean() , 2)
+if topper is not None:
+    st.markdown(f"""
             <div style="
             background:white;
             padding:20px;
@@ -240,13 +240,24 @@ st.markdown(f"""
             border-left:6px solid gold;
             ">
             <h3 style="color: gold;">🏆Top Performer</h3>
-            <b>Name: </b>{topper['sname']}<br>
-            <b>Course: </b>{topper['course']}<br>
-            <b>Marks: </b>{topper['marks']}<br>
+            <p><b>Name:</b> {topper['sname']}</p>
+            <p><b>Course:</b> {topper['course']}</p>
+            <p><b>Marks:</b> {topper['marks']}</p>
             </div>
-            """, unsafe_allow_html=True
-            )
- 
+        """, unsafe_allow_html=True)
+else:
+    st.markdown("""
+            <p style="
+            color:#d32f2f;
+            font-size:18px;
+            font-weight:bold;
+            text-align:center;
+            padding:25px;
+            ">       
+                ❌ No student found for the selected filters.
+            </p>
+            </div>
+                """, unsafe_allow_html=True )
 st.write("")
 st.write("")
 
@@ -524,6 +535,60 @@ fig_fee.update_layout(
 )
 st.subheader("💳 Fees Status")
 st.plotly_chart(fig_fee,use_container_width=True) 
+
+st.markdown('## 🌐 3D Student Performance Analysis')
+import plotly.express as px
+fig3d = px.scatter_3d(
+    filtered_df,
+    x = "marks",
+    y = "attendance_perc",
+    z = "age",
+    color = "placement_status",
+    size = "attendance_perc",
+    symbol = "placement_status",
+    hover_name = "sname",
+    hover_data = {
+        "course": True,
+        "city": True,
+        "semester" : True,
+        "marks" : True,
+        "attendance_perc": True,
+        "age":True
+    },
+    title="3d Student Performance Analysis",
+)
+fig3d.update_traces(
+    marker=dict(
+        opacity = 0.85,
+        sizemin = 5
+    )
+)
+fig3d.update_layout(
+    legend=dict(
+        orientation="h",
+        yanchor="bottom",
+        y=1.02,
+        xanchor="right",
+        x=0.5
+    ),
+    height=700,
+    title = {
+        "text": "🌐 3D Student Performance",
+        "x": 0.5,
+        "font": {"size": 24}
+    },
+    scene=dict(
+        xaxis_title="Marks",
+        yaxis_title="Attendance (%)",
+        zaxis_title="Age",
+        camera=dict(
+            eye=dict(x=1.7, y=1.7, z=1.2)
+        )
+    ),
+    legend_title="Placement Status",
+    margin=dict(l=0, r=0, b=0, t=60)
+)
+st.plotly_chart(fig3d, use_container_width=True)
 
 st.subheader("📋 Student Records")
 st.dataframe(filtered_df, use_container_width=True, hide_index=True)
