@@ -84,7 +84,7 @@ st.markdown("""
             font-size: 18px;
             color: #555;
             margin-top: -5px;'>
-            Welcome to the <b>Student Performance Dashboard</b>.<br>
+            Welcome to the <b>Student Performance Dashboard</b><br>
             Analyze student records, placements, attendance and academic performance in real-time. 
             </p>
             """,
